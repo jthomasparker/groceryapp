@@ -4,10 +4,11 @@ var db = require("./models");
 var app = express();
 var PORT = process.env.PORT || 8080;
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 var db = require('./models')
-//var routes = require('./controllers/burgers_controller.js')(app)
+var htmlRoutes = require('./controllers/html-routes.js')(app)
+var apiRoutes = require('./controllers/api-routes.js')(app)
 
 db.sequelize.sync({force: true }).then(function(){
     app.listen(PORT, function(){
