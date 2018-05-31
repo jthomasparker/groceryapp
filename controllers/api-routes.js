@@ -27,11 +27,10 @@ module.exports = function(app){
             console.log('Upload successful! Server responded with:', body);
             res.json(body)
           });
-       })
-       
+       })    
+    });
 
-        
-    })
+    
 
 
 }
