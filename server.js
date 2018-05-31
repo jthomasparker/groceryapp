@@ -10,7 +10,7 @@ var db = require('./models')
 var htmlRoutes = require('./controllers/html-routes.js')(app)
 var apiRoutes = require('./controllers/api-routes.js')(app)
 
-db.sequelize.sync({force: true }).then(function(){
+db.sequelize.sync({force: false }).then(function(){
     app.listen(PORT, function(){
         console.log("Server listening on port", PORT)
     });
