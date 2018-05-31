@@ -44,6 +44,19 @@ module.exports = function(app){
       })
     });
 
+    //get products by product name
+    app.get("/api/products/:product_name", function(req, res) {
+      db.Product.findAll({
+        where: {
+          product_name: req.params.product_name
+        },
+        include: [db.Store]
+      }).then(function(results){
+        console.log(results);
+        res.json(results);
+      });
+    });
+
 
 
 
