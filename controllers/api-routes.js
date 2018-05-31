@@ -30,7 +30,21 @@ module.exports = function(app){
        })    
     });
 
-    
+    //use for inserting PRODUCTS to db, presumably from scanner response
+    app.post("/api/products", function(req, res) {
+      db.Product.create(req.body).then(function(dbProduct) {
+        res.json(dbProduct);
+      })
+    });
+
+    //use for inserting STORES to db, presumably from scanner response
+    app.post("/api/stores", function(req, res) {
+      db.Store.create(req.body).then(function(dbStore) {
+        res.json(dbStore);
+      })
+    });
+
+
 
 
 }
