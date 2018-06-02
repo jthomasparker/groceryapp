@@ -9,11 +9,11 @@ var TestStore1 = {
     zip: "30309"
 };
 var TestStore2 = {
-    store_name: "Piggly Wiggly",
-    street: "Georgia Street",
+    store_name: "Walmart",
+    street: "835 Martin Luther King Junior Drive Northwest",
     city: "Atlanta",
     state: "GA",
-    zip: "33146"
+    zip: "30314"
 };
 var TestProduct1 = {
     product_name: "Bananas",
