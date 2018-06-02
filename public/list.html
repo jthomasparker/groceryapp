@@ -1,69 +1,108 @@
 <html lang="en">
+
 <head>
-        <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://bootswatch.com/3/cosmo/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <script src="https://cdn.temasys.io/adapterjs/0.15.x/adapter.min.js"></script>
     <script src="assets/js/list.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <link type="text/css" rel="stylesheet" src="assets/styles.css"/> 
-
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <link type="text/css" rel="stylesheet" src="assets/styles.css" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <title>Shopify | List</title>
 </head>
+<style>
+    .list {
+        padding: 10px 0;
+        border-top: solid 1px rgba(255, 255, 255, 0.1);
+        color: red;
+    }
+
+    .productName {
+        float: left
+    }
+
+    .price {
+        float: right
+    }
+
+    .storeInfo {
+        float: left
+    }
+</style>
+
 <body>
-    
-        <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                  <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                      <span class="sr-only">Toggle navigation</span>
-                      <span class="icon-bar"></span>
-                      <span class="icon-bar"></span>
-                      <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">Shoptimize</a>
-                  </div>
-              
-                  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                      <li id="navHome"><a href="index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> <span class="sr-only">(current)</span></a></li>
-                      <li id="navScanner"><a href="scanner.html"><span class="glyphicon glyphicon-camera" aria-hidden="true"></span></a></li>
-                      <li id="navList" class="active"><a href="list.html"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> <span class="sr-only">(current)</span></a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><div id="profilePic"></div></li>
-                        <li><a href="#" id="btnLogin" ></a></li>
-                    </ul>
-                  </div>
-                </div>
-        </nav>
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Shoptimize</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li id="navHome">
+                        <a href="index.html">
+                            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li id="navScanner">
+                        <a href="scanner.html">
+                            <span class="glyphicon glyphicon-camera" aria-hidden="true"></span>
+                        </a>
+                    </li>
+                    <li id="navList" class="active">
+                        <a href="list.html">
+                            <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <div id="profilePic"></div>
+                    </li>
+                    <li>
+                        <a href="#" id="btnLogin"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-0 col-md-3"></div>
             <div class="col-xs-12 col-md-6">
                 <center>
-                <div id="main">
-                    List page here
-                    <form class="navbar-form navbar-center" role="search">
-                        <div class="form-group">
-                          <input type="text" class="form-control" placeholder="Search products" id="productSearch">
+                    <div id="main">                        
+                        <form class="navbar-form navbar-center" role="search">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Search products" id="productSearch">
+                            </div>
+                            <button type="button" class="btn btn-default-right" id="btnSearch">Search</button>
+                        </form>
+                        Shopping List:
+                        <div class="panel panel-default">
+                            <ul class="list">
+                            </ul>
                         </div>
-                        <button type="button" class="btn btn-default-right" id="btnSearch">Search</button>
-                      </form>
-                      Shopping List:
-                      <span id="list">                         
-                      </span>
-                </div>
+                    </div>
                 </center>
             </div>
             <div class="col-xs-0 col-md-3"></div>
         </div>
-
     </div>
-
-
 </body>
+
 </html>

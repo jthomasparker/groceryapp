@@ -44,12 +44,16 @@ module.exports = function(app){
       })
     });
 
-    //get products by product name
+    //get cheapest top product by product name
     app.get("/api/products/:product_name", function(req, res) {
       db.Product.findAll({
         where: {
           product_name: req.params.product_name
         },
+        limit: 1,
+        order: [
+          ['price', 'ASC']
+        ],
         include: [db.Store]
       }).then(function(results){
         console.log(results);
