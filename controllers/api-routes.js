@@ -49,16 +49,12 @@ module.exports = function(app){
       })
     });
 
-    //get cheapest top product by product name
+    //get products by product name
     app.get("/api/products/:product_name", function(req, res) {
       db.Product.findAll({
         where: {
           product_name: req.params.product_name
         },
-        limit: 1,
-        order: [
-          ['price', 'ASC']
-        ],
         include: [db.Store]
       }).then(function(results){
         console.log(results);
@@ -93,6 +89,10 @@ function processReceipt(recData){
           //  }))
             console.log(storeId = store.id)
         })
+
+    for(var i in recData.lineAmounts){
+        var price = recData.lineAmounts[i].data
+    }
 
 }
 

@@ -19,13 +19,10 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
-<<<<<<< HEAD
     "express-fileupload": "^0.4.0",
     "formidable": "^1.2.1",
-=======
     "handlebars": "^4.0.11",
     "list.js": "^1.5.0",
->>>>>>> 0facedf7cadd0af475f877390e07ce34ba58d2ef
     "mysql": "^2.15.0",
     "mysql2": "^1.5.3",
     "request": "^2.87.0",
