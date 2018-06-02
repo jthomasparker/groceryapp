@@ -58,10 +58,6 @@ $(document).ready(function () {
     });
 })
 
-
-
-// choose product click event that saves event to favorites
-
 function renderOptimizedList(data) {
     console.log(data);
 
