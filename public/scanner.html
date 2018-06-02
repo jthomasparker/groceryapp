@@ -3,17 +3,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://bootswatch.com/3/cosmo/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
     <script src="https://cdn.temasys.io/adapterjs/0.15.x/adapter.min.js"></script>
     <script src="assets/js/scanner.js"></script>
-    <link href="https://stackpath.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <link href="assets/css/scanner.css" rel="stylesheet">
 
     <title>Shopify | Scanner</title>
 </head>
-<body>
+
+<style>
+    body { background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover
+    }
+</style>
+
+<body background="https://i.imgur.com/fRjJnbC.jpg">
+        <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                  <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                      <span class="sr-only">Toggle navigation</span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Shoptimize</a>
+                  </div>
+              
+                  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                      <li id="navHome"><a href="index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> <span class="sr-only">(current)</span></a></li>
+                      <li id="navScanner" class="active"><a href="scanner.html"><span class="glyphicon glyphicon-camera" aria-hidden="true"></span></a></li>
+                      <li id="navList"><a href="list.html"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> <span class="sr-only">(current)</span></a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><div id="profilePic"></div></li>
+                        <li><a href="#" id="btnLogin" ></a></li>
+                    </ul>
+                  </div>
+                </div>
+        </nav>
+
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-0 col-md-3"></div>
@@ -26,19 +60,20 @@
 
                             </div>
                         </div>
-                        <button class="btn btn-primary" id="reset">Add Another Receipt</button>
+                        <button class="btn btn-default" id="reset">Add Another Receipt</button>
                         </div>
                     <p>
                     <img class="img-responsive" id="result-image" src="" style="max-height: 70%; width: auto;">
                     <video id="video" autoplay></video>
                     </p>
                     <p>
-                    <button class="btn btn-primary" id="capture">Take Picture</button>
+                    <button class="btn btn-default" id="capture">Take Picture</button>
                     </p>
                     <h2>OR</h2>
                     <p>
-                    <label class="btn btn-primary"><input name="upload" type="file"  id="upload" accept="image/*" capture="environment"/>Upload Receipt</label>
+                    <label class="btn btn-default"><input name="upload" type="file"  id="upload" accept="image/*" capture="environment"/>Upload Receipt</label>
                     </p>
+
                 </div>
                 </center>
             </div>
