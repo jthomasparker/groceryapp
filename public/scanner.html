@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
     <script src="https://cdn.temasys.io/adapterjs/0.15.x/adapter.min.js"></script>
     <script src="assets/js/scanner.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
@@ -19,14 +20,25 @@
             <div class="col-xs-12 col-md-6">
                 <center>
                 <div id="main">
+                    <div id="overlay"> 
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped active" id="progressbar" role="progressbar" style="width: 1%">
+
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="reset">Add Another Receipt</button>
+                        </div>
                     <p>
+                    <img class="img-responsive" id="result-image" src="" style="max-height: 70%; width: auto;">
                     <video id="video" autoplay></video>
                     </p>
                     <p>
                     <button class="btn btn-primary" id="capture">Take Picture</button>
                     </p>
-                    <p>or</p>
-                    <label class="btn btn-primary" id="upload"><input type="file" accept="image/*" capture="environment"/>Upload Receipt</label>
+                    <h2>OR</h2>
+                    <p>
+                    <label class="btn btn-primary"><input name="upload" type="file"  id="upload" accept="image/*" capture="environment"/>Upload Receipt</label>
+                    </p>
                 </div>
                 </center>
             </div>
