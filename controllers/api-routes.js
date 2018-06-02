@@ -61,6 +61,13 @@ module.exports = function(app){
       });
     });
 
+    //use for inserting records into list
+    app.post("/api/list", function(req,req){
+      db.List.create(req.body).then(function(dbList){
+        res.json(dbList);
+      })
+    })
+
 
 
 
