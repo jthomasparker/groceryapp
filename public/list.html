@@ -1,13 +1,7 @@
 <html lang="en">
 
-<<<<<<< HEAD
-<head>
-=======
 <head profile="http://www.w3.org/2005/10/profile">
-    <link rel="icon" 
-        type="image/png" 
-        href="http://icons.iconarchive.com/icons/rockettheme/ecommerce/128/basket-icon.png">
->>>>>>> a19d35afed13b0bc9f8de0aaf3473263d1200261
+    <link rel="icon" type="image/png" href="http://icons.iconarchive.com/icons/rockettheme/ecommerce/128/basket-icon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -52,6 +46,12 @@
         margin: 10px;
         width: 250;
 
+    }
+
+    #modalMsg {
+        color: red;
+        padding-left: 26px;
+        float: left;
     }
 </style>
 
@@ -118,7 +118,7 @@
                             <ul class="list">
                             </ul>
                         </div>
-                        <button type="button" class="btn btn-default" id="btnSave" data-target="#saveModal" data-toggle="modal">Save</button>
+                        <button type="button" class="btn btn-default" id="btnSave">Save</button>
                     </div>
                 </center>
             </div>
@@ -146,6 +146,7 @@
                     <input type="text" class="form-control" placeholder="" id="nameInput">
                 </div>
                 <div class="modal-footer">
+                    <div id='modalMsg'></div>
                     <button type="button" class="btn btn-primary" id="saveName">Save changes</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>

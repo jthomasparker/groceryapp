@@ -1,4 +1,5 @@
 var listOfProducts = [];
+var displayingExistingList = false;
 
 //TEST DATA
 var TestStore1 = {
@@ -62,19 +63,28 @@ $(document).ready(function () {
         var productSearched = $("#productSearch").val();
         //find the product from the db using search like
         $.get("/api/products/" + productSearched, function (data) {
-            console.log(data);
             renderOptimizedList(data);
         });
         $(this).blur();
     });
     $('#btnSave').on('click', function () {
-        listOfProducts.forEach(product => {
-            upsertList({
-                list_name: "Test2"
-            }, product, 2);
-        });
+        $("#modalMsg").empty();
+        if(!displayingExistingList){
+            $('#saveModal').modal('show');            
+        }        
         $(this).blur();
     });
+    $('#saveName').on('click', function(){
+        var listName = getListNameFromUser();
+        if(listName != "" || listName != undefined){
+            listOfProducts.forEach(product => {
+                upsertList({
+                    list_name: listName
+                }, product, 2);
+            });
+            $('#saveModal').modal('hide');
+        }        
+    })
 
     $('a').on('click', '.removeProductBtn', function () {
         var thisBtn = $(this);
@@ -149,11 +159,21 @@ function renderEmpty() {
     alertDiv.text("No lists saved.");
 }
 
-function populateSavedListProduct(btn) {    
+function populateSavedListProduct(btn) {  
+    displayingExistingList = true;  
     $(".list").empty();
     $.get("/api/list/2/" + btn.id, function (data) {
         for (var i = 0; i < data.length; i++) {
             renderProductOnPage(data[i]);
         }
     })
+}
+
+function getListNameFromUser(){
+    if($('#nameInput').val() != "") {
+        return $('#nameInput').val().trim();
+    }
+    else{
+        $("#modalMsg").text("Please enter a list name to save your list");        
+    }
 }
