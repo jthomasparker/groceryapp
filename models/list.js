@@ -10,17 +10,14 @@ module.exports = function(sequelize, DataTypes) {
     });
 
     List.associate = function(models){
-        List.belongsTo(models.Product, {
-            foreignKey: {
-                allowNull: false
-            }
-        });
-    };
-    List.associate = function(models){
         List.belongsTo(models.User, {
-            foreignKey: {
-                allowNull: false
-            }
+            foreignKey: 'UserId'
+        });
+        // models.User.hasMany(List, {
+        //     foreignKey: 'UserId'
+        // });
+        List.belongsTo(models.Product, {
+            foreignKey: 'ProductId'
         });
     };
 

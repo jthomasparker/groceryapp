@@ -49,6 +49,22 @@ module.exports = function (app) {
     })
   });
 
+  //use for inserting USERS to db
+  app.post("/api/users", function (req, res) {
+    db.User.create(req.body).then(function (dbUser) {
+      res.json(dbUser);
+    })
+  });
+
+  //use for inserting lists to db
+  app.post("/api/lists/:product/:user", function (req, res) {
+    req.body.ProductId = req.params.product;
+    req.body.UserId = req.params.user;
+    db.List.create(req.body).then(function (dbList) {
+      res.json(dbList);
+    });
+  });
+
   //get cheapest top product by product name
   app.get("/api/products/:product_name", function (req, res) {
     db.Product.findAll({
@@ -67,12 +83,39 @@ module.exports = function (app) {
   });
 
   //use for inserting records into list
-  app.post("/api/list", function (req, req) {
+  app.post("/api/list", function (req, res) {
     db.List.create(req.body).then(function (dbList) {
       res.json(dbList);
-    })
-  })
+    });
+  });
 
+  //use for getting saved list names from user; for side column
+  app.get("/api/lists/:user", function (req, res) {
+    db.sequelize.query('SELECT DISTINCT list_Name FROM lists WHERE UserId = ' + req.params.user)
+      .then(function (data) {
+        console.log(data);
+        res.json(data);
+      });
+  });
+
+  //use for getting saved lists for user for name
+  app.get("/api/list/:user/:name", function (req, res) {
+    db.List.findAll({
+      where: {
+        list_name: req.params.name,
+        userId: req.params.user
+      },
+      include: [{
+        model: db.Product,
+        include: [{
+          model: db.Store
+        }]
+      }]
+    }).then(function (results) {
+      console.log(results);
+      res.json(results);
+    });
+  });
 
   function processReceipt(recData) {
     var store;
