@@ -18,15 +18,12 @@ module.exports = function(sequelize, DataTypes) {
         userLastName: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        userEmailAddress: {
+            type: DataTypes.STRING,
+            allowNull: true
         }
-    });
 
-    User.associate = function(models){
-        User.belongsTo(models.User, {
-            foreignKey: {
-                allowNull: false
-            }
-        });
-    };
+    });
     return User;
 }

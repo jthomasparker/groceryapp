@@ -1,9 +1,13 @@
 <html lang="en">
 
+<<<<<<< HEAD
+<head>
+=======
 <head profile="http://www.w3.org/2005/10/profile">
     <link rel="icon" 
         type="image/png" 
         href="http://icons.iconarchive.com/icons/rockettheme/ecommerce/128/basket-icon.png">
+>>>>>>> a19d35afed13b0bc9f8de0aaf3473263d1200261
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -36,9 +40,18 @@
         float: left
     }
 
-    body { background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover
+    body {
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover
+    }
+
+    .savedLists {
+        padding: 10px;
+        font-size: 17px;
+        margin: 10px;
+        width: 250;
+
     }
 </style>
 
@@ -58,18 +71,18 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li id="navHome">
-                        <a href="index.html">
+                        <a href="/">
                             <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li id="navScanner">
-                        <a href="scanner.html">
+                        <a href="/scanner">
                             <span class="glyphicon glyphicon-camera" aria-hidden="true"></span>
                         </a>
                     </li>
                     <li id="navList" class="active">
-                        <a href="list.html">
+                        <a href="/list">
                             <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
                             <span class="sr-only">(current)</span>
                         </a>
@@ -89,25 +102,54 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-0 col-md-3"></div>
+            <div class="col-xs-0 col-md-3">
+            </div>
             <div class="col-xs-12 col-md-6">
                 <center>
-                    <div id="main">                        
+                    <div id="main">
                         <form class="navbar-form navbar-center" role="search">
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Search products" id="productSearch">
+                                <input type="text" class="form-control" placeholder="Add products" id="productSearch">
                             </div>
-                            <button type="button" class="btn btn-default" id="btnSearch">Search</button>
+                            <button type="button" class="btn btn-default" id="btnSearch">Add</button>
                         </form>
                         Shopping List:
                         <div class="panel panel-default">
                             <ul class="list">
                             </ul>
                         </div>
+                        <button type="button" class="btn btn-default" id="btnSave" data-target="#saveModal" data-toggle="modal">Save</button>
                     </div>
                 </center>
             </div>
-            <div class="col-xs-0 col-md-3"></div>
+            <div class="col-xs-0 col-md-3">
+                <div class="panel-default">
+                    <div class="panel panel-heading">
+                        <h4 style="
+                        margin-left: 26px;
+                    ">Saved Lists</h4>
+                        <div id="savedLists" class="panel-body"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="saveModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Enter Your List Name:</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" placeholder="" id="nameInput">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="saveName">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>

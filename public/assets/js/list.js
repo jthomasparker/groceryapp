@@ -25,6 +25,14 @@ var TestProduct2 = {
     price: 3.62,
     StoreId: 12
 };
+var TestUser = {
+    username: "BananaLover338",
+    hash: "hashtokenhere123456789",
+    userFirstName: "Petunia",
+    userLastName: "Higgins",
+    userEmailAddress: "petty@ninja.com"
+}
+
 
 // $.post("/api/stores", TestStore2).then(function(data){
 //     console.log(data);
@@ -33,7 +41,23 @@ var TestProduct2 = {
 //     console.log("ADDING PRODUCT?!");
 //     console.log(data);
 // })
+// $.post("/api/users", TestUser).then(function(data){
+//     console.log(data);
+// });
+
+
+function upsertList(listData, prod, user) {
+    var productID = prod;
+    var userID = user;
+    $.post("/api/lists/" + productID + "/" + userID, listData)
+        .then(function (data) {
+            console.log(data);
+        });
+}
 $(document).ready(function () {
+
+    populateSavedLists(2);
+
     $('#btnSearch').on('click', function () {
         var productSearched = $("#productSearch").val();
         //find the product from the db using search like
@@ -41,61 +65,95 @@ $(document).ready(function () {
             console.log(data);
             renderOptimizedList(data);
         });
-        //add it to the array and display it
+        $(this).blur();
+    });
+    $('#btnSave').on('click', function () {
+        listOfProducts.forEach(product => {
+            upsertList({
+                list_name: "Test2"
+            }, product, 2);
+        });
         $(this).blur();
     });
 
-    $('a').on('click', '.removeProductBtn', function(){
-        console.log("dis clicked")
+    $('a').on('click', '.removeProductBtn', function () {
         var thisBtn = $(this);
         var prodId = $(this).attr("id");
-    
         var productDivToRemove = document.getElementById("product-result-" + prodId);
         productDivToRemove.remove();
-        
         var indexToRemove = listOfProducts.indexOf(prodId);
         listOfProducts.splice(indexToRemove, indexToRemove + 1);
     });
 })
 
 function renderOptimizedList(data) {
-    console.log(data);
-
-    if(listOfProducts.indexOf(data.id) == -1){
+    if (listOfProducts.indexOf(data.id) == -1) {
         for (var i = 0; i < data.length; i++) {
-            var productResultDiv = $("<div>");
-            productResultDiv.attr("id", "product-result-" + data[i].id);
-            productResultDiv.attr("class", "panel-body");             
-            var productPriceHeading = $("<div class='panel-heading'>");         
-            productPriceHeading.append("<p class='productName'>" + data[i].product_name + "</p>");
-            productPriceHeading.append("<p class = 'price'>" + data[i].price + "</p>");
-            var storeInfoDiv = $("<div class='storeInfo '>");
-            storeInfoDiv.append("<p>" + data[i].Store.store_name + "</p>");
-            storeInfoDiv.append("<p>" + data[i].Store.street + "</p>");
-            storeInfoDiv.append("<p>" + data[i].Store.city + ", " + data[i].Store.state + " " + data[i].Store.zip + "</p>");
-            productResultDiv.append(productPriceHeading, storeInfoDiv);
-            
-            productResultDiv.append(productPriceHeading, storeInfoDiv);
-            productResultDiv.append("<a id='" + data[i].id + "' class='btn btn-info btn-lg removeProductBtn' onclick = remove(this)><span class='glyphicon glyphicon-remove'></span> Remove </a>'");
-            $(".list").append(productResultDiv);  
-            listOfProducts.push(data[i].id);
-          }
-        
+            renderProductOnPage(data[i]);
+        }
     }
-    else{
+    else {
         //error message, you have already added this product to your list.
         console.log("this product already in list");
     }
 }
 
-function remove(thisBtn){
-    console.log(thisBtn)
-    var prodId = thisBtn.getAttribute("id");
+function renderProductOnPage(data) {
+    if(data.Store === undefined){
+        data = data.Product;
+    }
+    var productResultDiv = $("<div>");
+    productResultDiv.attr("id", "product-result-" + data.id);
+    productResultDiv.attr("class", "panel-body");
+    var productPriceHeading = $("<div class='panel-heading'>");
+    productPriceHeading.append("<p class='productName'>" + data.product_name + "</p>");
+    productPriceHeading.append("<p class = 'price'>" + data.price + "</p>");
+    var storeInfoDiv = $("<div class='storeInfo '>");
+    storeInfoDiv.append("<p>" + data.Store.store_name + "</p>");
+    storeInfoDiv.append("<p>" + data.Store.street + "</p>");
+    storeInfoDiv.append("<p>" + data.Store.city + ", " + data.Store.state + " " + data.Store.zip + "</p>");
+    productResultDiv.append(productPriceHeading, storeInfoDiv);
+    productResultDiv.append(productPriceHeading, storeInfoDiv);
+    productResultDiv.append("<a id='" + data.id + "' class='btn btn-info btn-lg removeProductBtn' onclick = remove(this)><span class='glyphicon glyphicon-remove'></span> Remove </a>'");
+    $(".list").append(productResultDiv);
+    listOfProducts.push(data.id);
+}
 
+function remove(thisBtn) {
+    var prodId = thisBtn.getAttribute("id");
     var productDivToRemove = document.getElementById("product-result-" + prodId);
     productDivToRemove.remove();
-    
     var indexToRemove = listOfProducts.indexOf(parseInt(prodId));
     listOfProducts.splice(indexToRemove, indexToRemove + 1);
 }
 
+function populateSavedLists(userID) {
+    var div = $("#savedLists");
+    div.empty();
+    $.get("/api/lists/" + userID, function (data) {
+        if (data[0].length != 0) {
+            for (var i = 0; i < data[0].length; i++) {
+                div.append("<button type='button' onclick='populateSavedListProduct(this)' id= '" + data[0][i].list_Name + "' " + "class='getListBtn savedLists btn btn-success btn-large' id='btnSearch'>" + data[0][i].list_Name.toString() + "</button>");
+            }
+        }
+        else {
+            renderEmpty();
+        }
+        nameInput.val = "";
+    });
+}
+
+function renderEmpty() {
+    var alertDiv = $("#savedLists");
+    alertDiv.addClass("alert alert-warning");
+    alertDiv.text("No lists saved.");
+}
+
+function populateSavedListProduct(btn) {    
+    $(".list").empty();
+    $.get("/api/list/2/" + btn.id, function (data) {
+        for (var i = 0; i < data.length; i++) {
+            renderProductOnPage(data[i]);
+        }
+    })
+}
