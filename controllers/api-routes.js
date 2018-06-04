@@ -116,6 +116,27 @@ module.exports = function (app) {
       res.json(results);
     });
   });
+  //user for removing products from list
+  app.delete("/api/list/:user/:listName/:product", function (req, res){
+    db.List.destroy({
+      where: {
+        UserId: req.params.user,
+        list_name: req.params.listName,
+        ProductId: req.params.product
+      }
+    }).then(function (dbList){
+      res.json(dbList);
+    })
+  });
+  //use for adding products to an existing list
+  app.post("/api/list/:user/:listName/:product", function (req, res){
+    req.body.ProductId = req.params.product;
+    req.body.UserId = req.params.user;
+    req.body.list_name = req.params.listName;
+    db.List.create(req.body).then(function (dbList) {
+      res.json(dbList);
+    });
+  })
 
   function processReceipt(recData) {
     var store;

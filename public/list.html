@@ -19,7 +19,6 @@
     .list {
         padding: 10px 0;
         border-top: solid 1px rgba(255, 255, 255, 0.1);
-        color: red;
     }
 
     .productName {
@@ -44,7 +43,7 @@
         padding: 10px;
         font-size: 17px;
         margin: 10px;
-        width: 250;
+        width: 95%;
 
     }
 
@@ -52,6 +51,29 @@
         color: red;
         padding-left: 26px;
         float: left;
+    }
+
+    #badgecontainer {
+        height: 20px;
+    }
+
+    .btn-default:hover {
+        background-color: #3fb618
+    }
+
+    .glyphicon-edit {
+        float: right;
+        padding-right: 22px;
+        padding-left: 22px;
+        color: black
+    }
+
+    .glyphicon-edit:hover {
+        color: #3fb618;
+    }
+
+    html {
+        overflow-y: scroll;
     }
 </style>
 
@@ -102,36 +124,43 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-0 col-md-3">
+            <div class=" col-md-3">
+                <div class="panel-default" style="margin-top: 2px">
+                    <div class="panel panel-heading">
+                        <h4 style="margin-left: 26px;">Saved Lists
+                            <a href="/list">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </a>
+                        </h4>
+
+                        <div id="savedLists" class="panel-body"></div>
+                    </div>
+                </div>
+
             </div>
-            <div class="col-xs-12 col-md-6">
+            <div class="col-md-6">
                 <center>
                     <div id="main">
+                        <div id='badgecontainer'>
+                            <span class="badge badge-important" style="background-color: red" role="alert">
+                                You've already added this product to the list.
+                            </span>
+                        </div>
                         <form class="navbar-form navbar-center" role="search">
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Add products" id="productSearch">
                             </div>
                             <button type="button" class="btn btn-default" id="btnSearch">Add</button>
                         </form>
-                        Shopping List:
+                        <h2 id="listNameLabel"></h2>
                         <div class="panel panel-default">
-                            <ul class="list">
-                            </ul>
+                            <div class="list"></div>
                         </div>
-                        <button type="button" class="btn btn-default" id="btnSave">Save</button>
+                        <button type="button" class="btn btn-success" id="btnSave">Save</button>
                     </div>
                 </center>
             </div>
-            <div class="col-xs-0 col-md-3">
-                <div class="panel-default">
-                    <div class="panel panel-heading">
-                        <h4 style="
-                        margin-left: 26px;
-                    ">Saved Lists</h4>
-                        <div id="savedLists" class="panel-body"></div>
-                    </div>
-                </div>
-
+            <div class="col-md-3">
             </div>
         </div>
     </div>
