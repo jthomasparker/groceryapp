@@ -54,12 +54,16 @@ $(document).ready(function () {
 
     if(listOfProducts.length == 0){
         $("#btnSave").hide();
-        $(".list").html("<i>Start creating your list by adding products above!</i>");
+       var msgDiv = $("<div id='emptyMsg'>");
+       msgDiv.html("<i>Start creating your list by adding products above!</i>")
+        $(".list").append(msgDiv);
     }
 
     $('#btnSearch').on('click', function () {
         var productSearched = $("#productSearch").val();
         $('.badge').hide();
+        $('#emptyMsg').hide();
+        $("#btnSave").show();
         //find the product from the db using search like
         $.get("/api/products/" + productSearched, function (data) {
             renderOptimizedList(data);
@@ -76,7 +80,6 @@ $(document).ready(function () {
             $('#saveModal').modal('show');            
         }
         else{
-            //if we need to update the list
             //remove the products
             if(productsToDeleteFromSavedList.length > 0){
                 for(var i = 0; i < productsToDeleteFromSavedList.length; i++){
@@ -139,7 +142,7 @@ function renderProductOnPage(data) {
     }
     var productResultDiv = $("<div>");
     productResultDiv.attr("id", "product-result-" + data.id);
-    productResultDiv.attr("class", "panel-body");
+    productResultDiv.attr("class", "panel-body row");
     var productPriceHeading = $("<div class='panel-heading'>");
     productPriceHeading.append("<p class='productName'>" + data.product_name + "</p>");
     productPriceHeading.append("<p class = 'price'>" + data.price + "</p>");
@@ -170,6 +173,9 @@ function remove(thisBtn) {
         var toRemoveIndex = productsToAddFromSavedList.indexOf(prodId);
         productsToAddFromSavedList.splice(toRemoveIndex, toRemoveIndex + 1);
     }
+    if(listOfProducts.length == 0){
+        $("#btnSave").hide();
+    }
 }
 
 function populateSavedLists(userID) {        
@@ -196,6 +202,7 @@ function renderEmpty() {
 
 function populateSavedListProduct(btn) { 
     $('.badge').hide();
+    $("#btnSave").show();
     listOfProducts = []; 
     displayingExistingList = true;  
     $(".list").empty();
@@ -215,22 +222,3 @@ function getListNameFromUser(){
         $("#modalMsg").text("Please enter a list name to save your list");        
     }
 }
-
-$('a').on('click', '.removeProductBtn', function () {
-        alert("remove");
-        var thisBtn = $(this);
-        var prodId = $(this).attr("id");
-        var productDivToRemove = document.getElementById("product-result-" + prodId);
-        productDivToRemove.remove();
-        var indexToRemove = listOfProducts.indexOf(prodId);
-        listOfProducts.splice(indexToRemove, indexToRemove + 1);
-        //if product is not in the new list to Add then remove it from the database
-        if(displayingExistingList && productsToAddFromSavedList.indexOf(prodId) == -1){
-            productsToDeleteFromSavedList.push(prodId);
-        }
-        //if product is in the new list to Add then remove it from the array to add
-        else if(displayingExistingList){
-            var toRemoveIndex = productsToAddFromSavedList.indexOf(prodId);
-            productsToAddFromSavedList.splice(toRemoveIndex, toRemoveIndex + 1);
-        }
-    });
