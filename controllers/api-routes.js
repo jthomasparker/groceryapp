@@ -136,7 +136,17 @@ module.exports = function (app) {
     db.List.create(req.body).then(function (dbList) {
       res.json(dbList);
     });
-  })
+  });
+  //use for getting product names from product ID
+  app.get("/api/product/:id", function (req, res){
+    db.Product.findOne({
+      where: {id : req.params.id}
+    }).then(function (results) {
+      res.json(results);
+    })
+  });
+  //use for getting total of product from certain store
+
 
   function processReceipt(recData) {
     var store;

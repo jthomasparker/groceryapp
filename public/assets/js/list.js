@@ -2,6 +2,13 @@ var listOfProducts = [];
 var displayingExistingList = false;
 var productsToDeleteFromSavedList = [];
 var productsToAddFromSavedList = [];
+var KrogerArray = [];
+var PublixArray = [];
+var WalmartArray = [];
+var currentProdNames = []
+var KrogerTotal;
+var PublicTotal;
+var WalmartTotal;
 
 //TEST DATA
 var TestStore1 = {
@@ -19,14 +26,19 @@ var TestStore2 = {
     zip: "30314"
 };
 var TestProduct1 = {
-    product_name: "Bananas",
-    price: .25,
+    product_name: "Bread",
+    price: 2.75,
     StoreId: 12
 };
 var TestProduct2 = {
-    product_name: "Eggs",
-    price: 3.62,
-    StoreId: 12
+    product_name: "Bread",
+    price: 2.65,
+    StoreId: 2
+};
+var TestProduct3 = {
+    product_name: "Bread",
+    price: 3.00,
+    StoreId: 22
 };
 var TestUser = {
     username: "BananaLover338",
@@ -41,6 +53,14 @@ var TestUser = {
 //     console.log(data);
 // });
 // $.post("/api/products", TestProduct1).then(function(data){
+//     console.log("ADDING PRODUCT?!");
+//     console.log(data);
+// })
+// $.post("/api/products", TestProduct2).then(function(data){
+//     console.log("ADDING PRODUCT?!");
+//     console.log(data);
+// })
+// $.post("/api/products", TestProduct3).then(function(data){
 //     console.log("ADDING PRODUCT?!");
 //     console.log(data);
 // })
@@ -59,7 +79,7 @@ $(document).ready(function () {
         $(".list").append(msgDiv);
     }
 
-    $('#btnSearch').on('click', function () {
+    $('#btnSearch').on('click', function () {        
         var productSearched = $("#productSearch").val();
         $('.badge').hide();
         $('#emptyMsg').hide();
@@ -221,4 +241,17 @@ function getListNameFromUser(){
     else{
         $("#modalMsg").text("Please enter a list name to save your list");        
     }
+}
+
+function getTotalsForEachStore(productArray){
+    var productNames = [];
+    
+    if(listOfProducts.length > 0){
+        listOfProducts.forEach(prodId => {
+            
+        });
+    }
+    //get product name for each Id in productArray and put them into an array
+    //loop through that array to get each price per store and put them into respective arrays
+    
 }

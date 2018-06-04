@@ -75,55 +75,61 @@
     html {
         overflow-y: scroll;
     }
+
     /* The switch - the box around the slider */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
 
-/* Hide default HTML checkbox */
-.switch input {display:none;}
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
 
-/* The slider */
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
+    /* Hide default HTML checkbox */
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
+    .switch input {
+        display: none;
+    }
 
-input:checked + .slider {
-  background-color: #3fb618;
-}
+    /* The slider */
 
-input:focus + .slider {
-  box-shadow: 0 0 1px #3fb618;
-}
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
 
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked+.slider {
+        background-color: #3fb618;
+    }
+
+    input:focus+.slider {
+        box-shadow: 0 0 1px #3fb618;
+    }
+
+    input:checked+.slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
 </style>
 
 <body background="https://i.imgur.com/fRjJnbC.jpg">
@@ -176,11 +182,11 @@ input:checked + .slider:before {
             <div class=" col-md-3">
                 <div class="panel-default" style="margin-top: 2px">
                     <div class="panel panel-heading">
-                        <h4 style="margin-left: 26px;">Saved Lists
+                        <h3 style="margin-left: 26px;">Saved Lists
                             <a href="/list">
                                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                             </a>
-                        </h4>
+                        </h3>
 
                         <div id="savedLists" class="panel-body"></div>
                     </div>
@@ -211,12 +217,23 @@ input:checked + .slider:before {
             </div>
             <div class="col-md-3">
                 <div class="panel panel-default">
-                    <div class="optimizeToggle">
-                        <h4>This list is optimized by default. To find the single best store to shop for these groceries, turn optimization off.</h4>
-                        <label class="switch">
-                            <input type="checkbox" checked="checked">
-                            <span class="slider"></span>
-                        </label>
+                    <div class="storeTotalPanel panel-body">
+                        <h3>Only looking to shop at one store? </h3>
+                        <h4>Below are the total costs for the items in your list at the stores near you.</h4>
+                        <table id="storeTable" class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <th>Kroger</th>
+                                <th>Publix</th>
+                                <th>Walmart</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="krogerTotal">$0.00</td>
+                                    <td id="publixTotal">$0.00</td>
+                                    <td id="walmartTotal">$0.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
