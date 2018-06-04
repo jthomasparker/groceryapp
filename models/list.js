@@ -6,6 +6,10 @@ module.exports = function(sequelize, DataTypes) {
             valiate: {
                 len: [1]
             }
+        },
+        product_amount: {
+            type: DataTypes.INTEGER,
+            allowNull: true
         }        
     });
 
