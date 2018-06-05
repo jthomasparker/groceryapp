@@ -3,6 +3,8 @@ var fs = require('fs')
 var taggunKey = 'aa7e7df05fa111e89de28943ab9a8b4e'
 var request = require('request')
 var path = require("path");
+const Op = db.sequelize.Op;
+var logic = require('./logic.js')
 
 module.exports = function(app){
 
@@ -25,12 +27,21 @@ module.exports = function(app){
             if (err) {
               return console.error('upload failed:', err);
             }
-            console.log('Upload successful! Server responded with:', body);
+            console.log('Upload successful!');
             var parsedBody = JSON.parse(body)
             if(!parsedBody.error){
-                processReceipt(parsedBody)
+                logic.processReceipt(parsedBody, (storeInfo, productRecords) => {
+                    console.log(storeInfo, productRecords)
+                    var data = {
+                        store: storeInfo,
+                        products: productRecords
+                    }
+                    res.json(data)
+                })
+            } else {
+                res.json(parsedBody)
             }
-            res.json(body)
+            
           });
        })    
     });
@@ -69,38 +80,14 @@ module.exports = function(app){
       })
     })
 
+    // updates the database with receipt results
+    app.post("/api/update", function(req, res){
+        console.log(req.body.products)
+        console.log(req.body.descriptions)
+        var products = req.body.products;
+        var descriptions = req.body.descriptions
+        logic.updateProducts(products, descriptions)
 
-function processReceipt(recData){
-    var store;
-    var storeId;
-    var storeAddress = function(street, city, state, zip){
-        street = this.street,
-        city = this.city,
-        state = this.state,
-        zip = this.zip
-    }
-    if(recData.merchantName.confidenceLevel > 0){
-        store = recData.merchantName.data
-        if(recData.merchantAddress.confidenceLevel > 0){
-            // fill in storeAddress
-            // find store that matches store && storeAddress.street
-        }
-    } else {
-        store = "unknown"
-    }
-
-    db.Store.findOrCreate({where: {store_name: store}, defaults: {}})
-        .spread((store, created) => {
-         //  console.log(store.get({
-          //      plain: true
-          //  }))
-            console.log(storeId = store.id)
-        })
-
-    for(var i in recData.lineAmounts){
-        var price = recData.lineAmounts[i].data
-    }
-
-}
-
+        res.json('ok')
+    })
 }
