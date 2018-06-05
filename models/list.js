@@ -6,21 +6,22 @@ module.exports = function(sequelize, DataTypes) {
             valiate: {
                 len: [1]
             }
+        },
+        product_amount: {
+            type: DataTypes.INTEGER,
+            allowNull: true
         }        
     });
 
     List.associate = function(models){
-        List.belongsTo(models.Product, {
-            foreignKey: {
-                allowNull: false
-            }
-        });
-    };
-    List.associate = function(models){
         List.belongsTo(models.User, {
-            foreignKey: {
-                allowNull: false
-            }
+            foreignKey: 'UserId'
+        });
+        // models.User.hasMany(List, {
+        //     foreignKey: 'UserId'
+        // });
+        List.belongsTo(models.Product, {
+            foreignKey: 'ProductId'
         });
     };
 
