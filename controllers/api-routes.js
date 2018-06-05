@@ -1,39 +1,53 @@
+//require("dotenv").config();
 var db = require('../models');
+//var keys = require('./keys.js')
 var fs = require('fs')
 var taggunKey = 'aa7e7df05fa111e89de28943ab9a8b4e'
 var request = require('request')
 var path = require("path");
+const Op = db.sequelize.Op;
+var logic = require('./logic.js')
 
-module.exports = function (app) {
+module.exports = function(app){
 
-  app.post('/api/receipt', function (req, res) {
-    var base64String = req.body.imgBase64
-    var base64Image = base64String.split(';base64,').pop();
-    fs.writeFile('receipt.png', base64Image, { encoding: 'base64' }, function (err) {
+    app.post('/api/receipt', function(req, res){
+       var base64String = req.body.imgBase64
+       var base64Image = base64String.split(';base64,').pop();
+       fs.writeFile('receipt.png', base64Image, {encoding: 'base64'}, function(err){
+           
+        // use the img data and img file, send it to taggun api
+           request.post({
+            "url": 'https://api.taggun.io/api/receipt/v1/verbose/encoded',
+            "headers": { "apikey": taggunKey },
+            "body": JSON.stringify({
+                "image": base64Image,
+                "filename": "receipt.png",
+                "contentType": "image/png",
+                "language": "en"
+            })
+          }, (err, httpResponse, body) => {
+            if (err) {
+              return console.error('upload failed:', err);
+            }
+            console.log('Upload successful!');
+            var parsedBody = JSON.parse(body)
+            if(!parsedBody.error){
+                logic.processReceipt(parsedBody, (storeInfo, productRecords) => {
+                    console.log(storeInfo, productRecords)
+                    var data = {
+                        store: storeInfo,
+                        products: productRecords
+                    }
+                    res.json(data)
+                })
+            } else {
+                res.json(parsedBody)
+            }
+            
+          });
+       })
+      })   
 
-      // use the img data and img file, send it to taggun api
-      request.post({
-        "url": 'https://api.taggun.io/api/receipt/v1/verbose/encoded',
-        "headers": { "apikey": taggunKey },
-        "body": JSON.stringify({
-          "image": base64Image,
-          "filename": "receipt.png",
-          "contentType": "image/png",
-          "language": "en"
-        })
-      }, (err, httpResponse, body) => {
-        if (err) {
-          return console.error('upload failed:', err);
-        }
-        console.log('Upload successful! Server responded with:', body);
-        var parsedBody = JSON.parse(body)
-        if (!parsedBody.error) {
-          processReceipt(parsedBody)
-        }
-        res.json(body)
-      });
-    })
-  });
 
   //use for inserting PRODUCTS to db, presumably from scanner response
   app.post("/api/products", function (req, res) {
@@ -99,6 +113,18 @@ module.exports = function (app) {
     });
   });
 
+    //get products by product name
+    app.get("/api/products/:product_name", function(req, res) {
+      db.Product.findAll({
+        where: {
+          product_name: req.params.product_name
+        },
+        include: [db.Store]
+      }).then(function(results){
+        console.log(results);
+        res.json(results);
+      })
+    })
   //use for getting saved list names from user; for side column
   app.get("/api/lists/:user", function (req, res) {
     db.sequelize.query('SELECT DISTINCT list_Name FROM lists WHERE UserId = ' + req.params.user)
@@ -148,6 +174,16 @@ module.exports = function (app) {
     });
   });
 
+    // updates the database with receipt results
+    app.post("/api/update", function(req, res){
+        console.log(req.body.products)
+        console.log(req.body.descriptions)
+        var products = req.body.products;
+        var descriptions = req.body.descriptions
+        logic.updateProducts(products, descriptions)
+
+        res.json('ok')
+    })
   //use for getting total of product from certain store
   app.get("/api/products/:productName/:storeName", function (req, res){
     db.Product.findOne({
@@ -164,34 +200,5 @@ module.exports = function (app) {
       res.json(results);
     })
   });
-
-  function processReceipt(recData) {
-    var store;
-    var storeId;
-    var storeAddress = function (street, city, state, zip) {
-      street = this.street,
-        city = this.city,
-        state = this.state,
-        zip = this.zip
-    }
-    if (recData.merchantName.confidenceLevel > 0) {
-      store = recData.merchantName.data
-      if (recData.merchantAddress.confidenceLevel > 0) {
-        // fill in storeAddress
-        // find store that matches store && storeAddress.street
-      }
-    } else {
-      store = "unknown"
-    }
-
-    db.Store.findOrCreate({ where: { store_name: store }, defaults: {} })
-      .spread((store, created) => {
-        //  console.log(store.get({
-        //      plain: true
-        //  }))
-        console.log(storeId = store.id)
-      })
-
-  }
 
 }
