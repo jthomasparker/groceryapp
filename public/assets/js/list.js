@@ -2,6 +2,13 @@ var listOfProducts = [];
 var displayingExistingList = false;
 var productsToDeleteFromSavedList = [];
 var productsToAddFromSavedList = [];
+var KrogerArray = [];
+var PublixArray = [];
+var WalmartArray = [];
+var currentProdNames = []
+var KrogerTotal;
+var PublicTotal;
+var WalmartTotal;
 
 //TEST DATA
 var TestStore1 = {
@@ -19,14 +26,19 @@ var TestStore2 = {
     zip: "30314"
 };
 var TestProduct1 = {
-    product_name: "Bananas",
-    price: .25,
+    product_name: "Bread",
+    price: 2.75,
     StoreId: 12
 };
 var TestProduct2 = {
-    product_name: "Eggs",
-    price: 3.62,
-    StoreId: 12
+    product_name: "Bread",
+    price: 2.65,
+    StoreId: 2
+};
+var TestProduct3 = {
+    product_name: "Bread",
+    price: 3.00,
+    StoreId: 22
 };
 var TestUser = {
     username: "BananaLover338",
@@ -44,6 +56,14 @@ var TestUser = {
 //     console.log("ADDING PRODUCT?!");
 //     console.log(data);
 // })
+// $.post("/api/products", TestProduct2).then(function(data){
+//     console.log("ADDING PRODUCT?!");
+//     console.log(data);
+// })
+// $.post("/api/products", TestProduct3).then(function(data){
+//     console.log("ADDING PRODUCT?!");
+//     console.log(data);
+// })
 // $.post("/api/users", TestUser).then(function(data){
 //     console.log(data);
 // });
@@ -52,11 +72,8 @@ $(document).ready(function () {
     $('.badge').hide();
     populateSavedLists(2);
 
-    if(listOfProducts.length == 0){
-        $("#btnSave").hide();
-       var msgDiv = $("<div id='emptyMsg'>");
-       msgDiv.html("<i>Start creating your list by adding products above!</i>")
-        $(".list").append(msgDiv);
+    if (listOfProducts.length == 0) {
+        emptyListDisplay();
     }
 
     $('#btnSearch').on('click', function () {
@@ -64,10 +81,11 @@ $(document).ready(function () {
         $('.badge').hide();
         $('#emptyMsg').hide();
         $("#btnSave").show();
+        $('#optimizedTotal').show();
         //find the product from the db using search like
         $.get("/api/products/" + productSearched, function (data) {
             renderOptimizedList(data);
-            if(displayingExistingList){
+            if (displayingExistingList) {
                 productsToAddFromSavedList.push(data[0].id);
             }
         });
@@ -76,44 +94,50 @@ $(document).ready(function () {
     $('#btnSave').on('click', function () {
         $("#modalMsg").empty();
         var listName = $("#listNameLabel").text();
-        if(!displayingExistingList){
-            $('#saveModal').modal('show');            
+        if (!displayingExistingList) {
+            $('#saveModal').modal('show');
         }
-        else{
+        else {
             //remove the products
-            if(productsToDeleteFromSavedList.length > 0){
-                for(var i = 0; i < productsToDeleteFromSavedList.length; i++){
+            if (productsToDeleteFromSavedList.length > 0) {
+                for (var i = 0; i < productsToDeleteFromSavedList.length; i++) {
                     $.ajax({
                         method: "DELETE",
                         url: "/api/list/2/" + listName + "/" + productsToDeleteFromSavedList[i]
-                      }).then(console.log("DELETED " + productsToDeleteFromSavedList[i]));
-                }         
+                    }).then(console.log("DELETED " + productsToDeleteFromSavedList[i]));
+                }
             }
             //add the products
-            if(productsToAddFromSavedList.length > 0){
-                for(var i = 0; i < productsToAddFromSavedList.length; i++){
+            if (productsToAddFromSavedList.length > 0) {
+                for (var i = 0; i < productsToAddFromSavedList.length; i++) {
                     $.post("/api/list/2/" + listName + "/" + productsToAddFromSavedList[i])
-                    .then(console.log("ADDED " + productsToAddFromSavedList[i]));
-                }    
-            } 
-        }        
+                        .then(console.log("ADDED " + productsToAddFromSavedList[i]));
+                }
+            }
+            $(".list-save").text(listName + " has been updated!")
+            $("#updatedModal").modal('show');
+        }
         $(this).blur();
     });
-    $('#saveName').on('click', function(){
+    $('#saveName').on('click', function () {
         var listName = getListNameFromUser();
-        if(listName != "" || listName != undefined){
-            listOfProducts.forEach(product => {
+        var prodId = ""
+        if (listName != "" || listName != undefined) {
+            listOfProducts.forEach(productId => {
+                $.get("/api/product/" + productId, function (data) {
+                    prodID = data[0].id;
+                })
                 upsertList({
                     list_name: listName
-                }, product, 2);
+                }, prodID, 2);
             });
             populateSavedLists(2);
             $('#saveModal').modal('hide');
             displayingExistingList = true;
-        }        
+        }
     });
 
-    
+
 })
 function upsertList(listData, prod, user) {
     var productID = prod;
@@ -124,8 +148,18 @@ function upsertList(listData, prod, user) {
         });
 }
 
+function productAlreadyInList(product) {
+    var productAlreadyInList = false;
+    for (var i = 0; i < listOfProducts.length; i++) {
+        if (listOfProducts[i].id == product[0].id) {
+            productAlreadyInList = true;
+        }
+    }
+    return productAlreadyInList;
+}
+
 function renderOptimizedList(data) {
-    if (listOfProducts.indexOf(data[0].id) == -1) {
+    if (!productAlreadyInList(data)) {
         for (var i = 0; i < data.length; i++) {
             renderProductOnPage(data[i]);
         }
@@ -137,48 +171,68 @@ function renderOptimizedList(data) {
 }
 
 function renderProductOnPage(data) {
-    if(data.Store === undefined){
+    if (data.Store === undefined) {
         data = data.Product;
     }
     var productResultDiv = $("<div>");
     productResultDiv.attr("id", "product-result-" + data.id);
     productResultDiv.attr("class", "panel-body row");
-    var productPriceHeading = $("<div class='panel-heading'>");
-    productPriceHeading.append("<p class='productName'>" + data.product_name + "</p>");
-    productPriceHeading.append("<p class = 'price'>" + data.price + "</p>");
-    var storeInfoDiv = $("<div class='storeInfo '>");
-    storeInfoDiv.append("<p>" + data.Store.store_name + "</p>");
-    storeInfoDiv.append("<p>" + data.Store.street + "</p>");
-    storeInfoDiv.append("<p>" + data.Store.city + ", " + data.Store.state + " " + data.Store.zip + "</p>");
-    productResultDiv.append(productPriceHeading, storeInfoDiv);
-    productResultDiv.append(productPriceHeading, storeInfoDiv);
-    productResultDiv.append("<a id='" + data.id + "' class='btn btn-info btn-lg removeProductBtn' onclick = remove(this)><span class='glyphicon glyphicon-remove'></span> Remove </a>'");
-    $(".list").append(productResultDiv);
-    listOfProducts.push(data.id);
+    var productRemoveHeading = $("<div class='col-xs-2'>");
+    productRemoveHeading.append("<a id='" + data.id + "' class='removeProductBtn' onclick = remove(this)><span class='glyphicon glyphicon-remove'></span> Remove </a>");
+    productResultDiv.append(productRemoveHeading);
+    var productNameHeading = $("<div class='productName col-xs-4'>");
+    productNameHeading.append("<h4>"+  data.product_name + "</h4>")
+    productResultDiv.append(productNameHeading);
+    var productPriceHeading = $("<div class = 'price col-xs-4'>");
+    productPriceHeading.append("<h4> $" + data.price.toFixed(2) + "</h4>");
+    productResultDiv.append(productPriceHeading);
+    var spaceDiv = $("<div class='col-xs-2'>");
+    productResultDiv.append(spaceDiv);
+    
+    var storeInfoRow = $("<div class='storeInfo panel-body row'>");
+    var blankRemoveDiv = $("<div class='col-xs-2'>");
+    storeInfoRow.append(blankRemoveDiv);
+    var storeNameDiv = $("<div class='col-xs-4'>");
+
+    storeNameDiv.append("<h5>" + data.Store.store_name + ", " + data.Store.city + "</h5>");
+    storeInfoRow.append(storeNameDiv);
+    
+    $(".list").append(productResultDiv, storeInfoRow );
+    listOfProducts.push(data);
+    getTotalsForEachStore();
 }
 
 function remove(thisBtn) {
     var prodId = thisBtn.getAttribute("id");
     var productDivToRemove = document.getElementById("product-result-" + prodId);
     productDivToRemove.remove();
-    var indexToRemove = listOfProducts.indexOf(parseInt(prodId));
-    listOfProducts.splice(indexToRemove, indexToRemove + 1);
+    var indexToRemove;
+    $.get("/api/product/" + prodId, function (data) {
+        for (var i = 0; i < listOfProducts.length; i++) {
+            if (listOfProducts[i].id == data.id) {
+                indexToRemove = i;
+            }
+        }
+        listOfProducts.splice(indexToRemove, indexToRemove + 1);
+        getTotalsForEachStore();
+        if (listOfProducts.length == 0) {
+            emptyListDisplay();
+        }
+    });
 
     //if product is not in the new list to Add then remove it from the database
-    if(displayingExistingList && productsToAddFromSavedList.indexOf(prodId) == -1){
+    if (displayingExistingList && productsToAddFromSavedList.indexOf(prodId) == -1) {
         productsToDeleteFromSavedList.push(prodId);
     }
     //if product is in the new list to Add then remove it from the array to add
-    else if(displayingExistingList){
+    else if (displayingExistingList) {
         var toRemoveIndex = productsToAddFromSavedList.indexOf(prodId);
         productsToAddFromSavedList.splice(toRemoveIndex, toRemoveIndex + 1);
     }
-    if(listOfProducts.length == 0){
-        $("#btnSave").hide();
-    }
+
 }
 
-function populateSavedLists(userID) {        
+function populateSavedLists(userID) {
     var div = $("#savedLists");
     div.empty();
     $.get("/api/lists/" + userID, function (data) {
@@ -190,7 +244,7 @@ function populateSavedLists(userID) {
         else {
             renderEmpty();
         }
-        nameInput.val = "";        
+        nameInput.val = "";
     });
 }
 
@@ -200,11 +254,12 @@ function renderEmpty() {
     alertDiv.text("No lists saved.");
 }
 
-function populateSavedListProduct(btn) { 
+function populateSavedListProduct(btn) {
     $('.badge').hide();
     $("#btnSave").show();
-    listOfProducts = []; 
-    displayingExistingList = true;  
+    $('#optimizedTotal').show();
+    listOfProducts = [];
+    displayingExistingList = true;
     $(".list").empty();
     $.get("/api/list/2/" + btn.id, function (data) {
         for (var i = 0; i < data.length; i++) {
@@ -214,11 +269,60 @@ function populateSavedListProduct(btn) {
     $("#listNameLabel").text(btn.id);
 }
 
-function getListNameFromUser(){
-    if($('#nameInput').val() != "") {
+function getListNameFromUser() {
+    if ($('#nameInput').val() != "") {
         return $('#nameInput').val().trim();
     }
-    else{
-        $("#modalMsg").text("Please enter a list name to save your list");        
+    else {
+        $("#modalMsg").text("Please enter a list name to save your list");
     }
+}
+
+function getTotalsForEachStore() {
+    KrogerTotal = 0;
+    PublixTotal = 0;
+    WalmartTotal = 0;
+    //this could totally be optimized by grabbing the stores and iterating thru them
+    if (listOfProducts.length > 0) {
+        listOfProducts.forEach(product => {
+            $.get("/api/products/" + product.product_name + "/kroger", function (data) {
+                KrogerTotal += data.price;
+                //render in table
+                $("#krogerTotal").text("$" + KrogerTotal.toFixed(2));
+
+            });
+            $.get("/api/products/" + product.product_name + "/publix", function (data) {
+                PublixTotal += data.price;
+                //render in table
+                $("#publixTotal").text("$" + PublixTotal.toFixed(2));
+            });
+            $.get("/api/products/" + product.product_name + "/walmart", function (data) {
+                WalmartTotal += data.price;
+                //render in table
+                $("#walmartTotal").text("$" + WalmartTotal.toFixed(2));
+            });
+        });
+    }
+    else {
+        $("#krogerTotal").text("$-.--");
+        $("#publixTotal").text("$-.--");
+        $("#walmartTotal").text("$-.--");
+    }
+    getOptimizedTotal();
+}
+
+function getOptimizedTotal(){
+    var total = 0;
+    listOfProducts.forEach(product => {
+        total += product.price;
+    });
+    $("#optimizedTotal").text("$" + total.toFixed(2));
+}
+
+function emptyListDisplay(){
+    $("#btnSave").hide();
+    $('#optimizedTotal').hide();
+    var msgDiv = $("<div id='emptyMsg'>");
+    msgDiv.html("<i>Start creating your list by adding products above!</i>")
+    $(".list").append(msgDiv);
 }
