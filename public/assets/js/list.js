@@ -121,6 +121,16 @@ $(document).ready(function () {
         }
         $(this).blur();
     });
+    $('#btnPrint').on('click', function () {
+        var prtContent = document.getElementById("#printThis");
+        var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+        WinPrint.document.write(prtContent.innerHTML);
+        WinPrint.document.close();
+        WinPrint.focus();
+        WinPrint.print();
+        WinPrint.close();
+        window.print();
+    })
     $('#saveName').on('click', function () {
         var listName = getListNameFromUser();
         if (listName != "" || listName != undefined) {
@@ -184,7 +194,7 @@ function renderProductOnPage(data) {
     productRemoveHeading.append("<a id='" + data.id + "' class='removeProductBtn' onclick = remove(this)><span class='glyphicon glyphicon-remove'></span> Remove </a>");
     productInfoDiv.append(productRemoveHeading);
     var productNameHeading = $("<div class='productName col-xs-4'>");
-    productNameHeading.append("<h4>"+  data.product_name + "</h4>")
+    productNameHeading.append("<h4>" + data.product_name + "</h4>")
     productInfoDiv.append(productNameHeading);
     var productPriceHeading = $("<div class = 'price col-xs-4'>");
     productPriceHeading.append("<h4> $" + data.price.toFixed(2) + "</h4>");
@@ -200,7 +210,7 @@ function renderProductOnPage(data) {
     storeNameDiv.append("<h5>" + data.Store.store_name + ", " + data.Store.city + "</h5>");
     storeInfoRow.append(storeNameDiv);
     productResultDiv.append(storeInfoRow);
-    
+
     $(".list").append(productResultDiv);
     listOfProducts.push(data);
     getTotalsForEachStore();
@@ -315,7 +325,7 @@ function getTotalsForEachStore() {
     getOptimizedTotal();
 }
 
-function getOptimizedTotal(){
+function getOptimizedTotal() {
     var total = 0;
     listOfProducts.forEach(product => {
         total += product.price;
@@ -323,7 +333,7 @@ function getOptimizedTotal(){
     $("#optimizedTotal").text("$" + total.toFixed(2));
 }
 
-function emptyListDisplay(){
+function emptyListDisplay() {
     $("#btnSave").hide();
     $('#optimizedTotal').hide();
     var msgDiv = $("<div id='emptyMsg'>");
