@@ -123,13 +123,13 @@ $(document).ready(function () {
         var listName = getListNameFromUser();
         var prodId = ""
         if (listName != "" || listName != undefined) {
-            listOfProducts.forEach(productId => {
-                $.get("/api/product/" + productId, function (data) {
-                    prodID = data[0].id;
+            listOfProducts.forEach(product => {
+                $.get("/api/product/" + product.id, function (data) {
+                    product.id = data[0].id;
                 })
                 upsertList({
                     list_name: listName
-                }, prodID, 2);
+                }, product.id, 2);
             });
             populateSavedLists(2);
             $('#saveModal').modal('hide');
