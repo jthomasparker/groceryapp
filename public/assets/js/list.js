@@ -176,19 +176,20 @@ function renderProductOnPage(data) {
     }
     var productResultDiv = $("<div>");
     productResultDiv.attr("id", "product-result-" + data.id);
-    productResultDiv.attr("class", "panel-body row");
+    var productInfoDiv = $("<div>")
+    productInfoDiv.attr("class", "panel-body row");
     var productRemoveHeading = $("<div class='col-xs-2'>");
     productRemoveHeading.append("<a id='" + data.id + "' class='removeProductBtn' onclick = remove(this)><span class='glyphicon glyphicon-remove'></span> Remove </a>");
-    productResultDiv.append(productRemoveHeading);
+    productInfoDiv.append(productRemoveHeading);
     var productNameHeading = $("<div class='productName col-xs-4'>");
     productNameHeading.append("<h4>"+  data.product_name + "</h4>")
-    productResultDiv.append(productNameHeading);
+    productInfoDiv.append(productNameHeading);
     var productPriceHeading = $("<div class = 'price col-xs-4'>");
     productPriceHeading.append("<h4> $" + data.price.toFixed(2) + "</h4>");
-    productResultDiv.append(productPriceHeading);
+    productInfoDiv.append(productPriceHeading);
     var spaceDiv = $("<div class='col-xs-2'>");
-    productResultDiv.append(spaceDiv);
-    
+    productInfoDiv.append(spaceDiv);
+    productResultDiv.append(productInfoDiv);
     var storeInfoRow = $("<div class='storeInfo panel-body row'>");
     var blankRemoveDiv = $("<div class='col-xs-2'>");
     storeInfoRow.append(blankRemoveDiv);
@@ -196,8 +197,9 @@ function renderProductOnPage(data) {
 
     storeNameDiv.append("<h5>" + data.Store.store_name + ", " + data.Store.city + "</h5>");
     storeInfoRow.append(storeNameDiv);
+    productResultDiv.append(storeInfoRow);
     
-    $(".list").append(productResultDiv, storeInfoRow );
+    $(".list").append(productResultDiv);
     listOfProducts.push(data);
     getTotalsForEachStore();
 }
