@@ -116,12 +116,13 @@ $(document).ready(function () {
             }
             $(".list-save").text(listName + " has been updated!")
             $("#updatedModal").modal('show');
+            productsToDeleteFromSavedList = [];
+            productsToAddFromSavedList = [];
         }
         $(this).blur();
     });
     $('#saveName').on('click', function () {
         var listName = getListNameFromUser();
-        var prodId = ""
         if (listName != "" || listName != undefined) {
             listOfProducts.forEach(product => {
                 $.get("/api/product/" + product.id, function (data) {
@@ -134,6 +135,7 @@ $(document).ready(function () {
             populateSavedLists(2);
             $('#saveModal').modal('hide');
             displayingExistingList = true;
+            populateSavedListProduct(listName);
         }
     });
 
@@ -215,7 +217,7 @@ function remove(thisBtn) {
                 indexToRemove = i;
             }
         }
-        listOfProducts.splice(indexToRemove, indexToRemove + 1);
+        listOfProducts.splice(indexToRemove, 1);
         getTotalsForEachStore();
         if (listOfProducts.length == 0) {
             emptyListDisplay();
@@ -240,7 +242,7 @@ function populateSavedLists(userID) {
     $.get("/api/lists/" + userID, function (data) {
         if (data[0].length != 0) {
             for (var i = 0; i < data[0].length; i++) {
-                div.append("<button type='button' onclick='populateSavedListProduct(this)' id= '" + data[0][i].list_Name + "' " + "class='getListBtn savedLists btn btn-default btn-large' id='btnSearch'>" + data[0][i].list_Name.toString() + "</button>");
+                div.append("<button type='button' onclick='populateSavedListProduct(this.id)' id= '" + data[0][i].list_Name + "' " + "class='getListBtn savedLists btn btn-default btn-large' id='btnSearch'>" + data[0][i].list_Name.toString() + "</button>");
             }
         }
         else {
@@ -256,19 +258,19 @@ function renderEmpty() {
     alertDiv.text("No lists saved.");
 }
 
-function populateSavedListProduct(btn) {
+function populateSavedListProduct(listName) {
     $('.badge').hide();
     $("#btnSave").show();
     $('#optimizedTotal').show();
     listOfProducts = [];
     displayingExistingList = true;
     $(".list").empty();
-    $.get("/api/list/2/" + btn.id, function (data) {
+    $.get("/api/list/2/" + listName, function (data) {
         for (var i = 0; i < data.length; i++) {
             renderProductOnPage(data[i]);
         }
     });
-    $("#listNameLabel").text(btn.id);
+    $("#listNameLabel").text(listName);
 }
 
 function getListNameFromUser() {
