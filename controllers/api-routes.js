@@ -1,4 +1,6 @@
+//require("dotenv").config();
 var db = require('../models');
+//var keys = require('./keys.js')
 var fs = require('fs')
 var taggunKey = 'aa7e7df05fa111e89de28943ab9a8b4e'
 var request = require('request')
@@ -43,7 +45,8 @@ module.exports = function(app){
             }
             
           });
-       })    
+       })
+      })   
 
 
   //use for inserting PRODUCTS to db, presumably from scanner response
@@ -120,6 +123,8 @@ module.exports = function(app){
       }).then(function(results){
         console.log(results);
         res.json(results);
+      })
+    })
   //use for getting saved list names from user; for side column
   app.get("/api/lists/:user", function (req, res) {
     db.sequelize.query('SELECT DISTINCT list_Name FROM lists WHERE UserId = ' + req.params.user)

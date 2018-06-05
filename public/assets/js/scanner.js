@@ -30,7 +30,7 @@ $(document).ready(function(){
        var storeId = $('#resultsTable').attr('storeId')
        var error = $(this).attr("results-error")
        
-       if(!error){
+       if(error === "false"){
 
        $('#resultsTable tr').each(function(rowIdx){
            if(rowIdx === 0){
@@ -220,12 +220,12 @@ function processResult(data){
         })
         var newRow = $('<tr>').append(productName, description, price)
         table.append(newRow)
-        $('#submitResults').html("Looks Good!").attr("results-error", false)
+        $('#submitResults').html("Looks Good!").attr("results-error", "false")
     }
    
     } else {
         message = "We had problems with your receipt, please try again"
-        $('#submitResults').html("Ok").attr("results-error", true)
+        $('#submitResults').html("Ok").attr("results-error", "true")
     }
     $('.modal-body').html(message).append(tableDiv)
     

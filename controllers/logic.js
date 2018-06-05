@@ -154,7 +154,7 @@ const Op = db.sequelize.Op;
                     
                 } else {
                     // check to see if the productname already exists, create it if it doesn't
-                      return db.Productname.findOrCreate({
+                        db.Productname.findOrCreate({
                         where: {
                             name: {
                                 [Op.like]: '%' + productName + '%'
@@ -166,7 +166,7 @@ const Op = db.sequelize.Op;
                     }).spread((product, created) => {
                        // create the description reference with the new productnameId
                         var prodId = product.dataValues.id
-                        return db.Reference.create({
+                            db.Reference.create({
                             product_name: productName,
                             description: desc,
                             ProductnameId: prodId
