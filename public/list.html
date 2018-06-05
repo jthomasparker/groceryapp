@@ -26,11 +26,11 @@
     }
 
     .price {
-        float: right
+        /* float: right */
     }
 
     .storeInfo {
-        float: left
+        /* float: left */
     }
 
     body {
@@ -209,8 +209,10 @@
                         </form>
                         <h2 id="listNameLabel"></h2>
                         <div class="panel panel-default">
+                            
+                                <div id = "optimizedTotal"></div>
                             <div class="list"></div>
-                        </div>
+                        </div>                        
                         <button type="button" class="btn btn-success" id="btnSave">Save</button>
                     </div>
                 </center>
@@ -228,9 +230,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td id="krogerTotal">$0.00</td>
-                                    <td id="publixTotal">$0.00</td>
-                                    <td id="walmartTotal">$0.00</td>
+                                    <td id="krogerTotal">$-.--</td>
+                                    <td id="publixTotal">$-.--</td>
+                                    <td id="walmartTotal">$-.--</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -251,12 +253,22 @@
                 </div>
                 <div class="modal-footer">
                     <div id='modalMsg'></div>
-                    <button type="button" class="btn btn-primary" id="saveName">Save changes</button>
+                    <button type="button" class="btn btn-primary" id="saveName">Save List</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
+    <div class="modal" tabindex="-1" role="dialog" id="updatedModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-body list-save"></h3>
+                        <button type="button" style= "float: right" class="btn btn-success right" data-dismiss="modal">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 </body>
 
 </html>

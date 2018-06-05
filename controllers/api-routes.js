@@ -82,6 +82,16 @@ module.exports = function (app) {
     });
   });
 
+  //use for getting product names from product ID
+  app.get("/api/product/:id", function (req, res) {
+    db.Product.findOne({
+      where: { id: req.params.id },
+      include: [db.Store]
+    }).then(function (results) {
+      res.json(results);
+    })
+  });
+
   //use for inserting records into list
   app.post("/api/list", function (req, res) {
     db.List.create(req.body).then(function (dbList) {
@@ -117,19 +127,19 @@ module.exports = function (app) {
     });
   });
   //user for removing products from list
-  app.delete("/api/list/:user/:listName/:product", function (req, res){
+  app.delete("/api/list/:user/:listName/:product", function (req, res) {
     db.List.destroy({
       where: {
         UserId: req.params.user,
         list_name: req.params.listName,
         ProductId: req.params.product
       }
-    }).then(function (dbList){
+    }).then(function (dbList) {
       res.json(dbList);
     })
   });
   //use for adding products to an existing list
-  app.post("/api/list/:user/:listName/:product", function (req, res){
+  app.post("/api/list/:user/:listName/:product", function (req, res) {
     req.body.ProductId = req.params.product;
     req.body.UserId = req.params.user;
     req.body.list_name = req.params.listName;
@@ -137,16 +147,23 @@ module.exports = function (app) {
       res.json(dbList);
     });
   });
-  //use for getting product names from product ID
-  app.get("/api/product/:id", function (req, res){
+
+  //use for getting total of product from certain store
+  app.get("/api/products/:productName/:storeName", function (req, res){
     db.Product.findOne({
-      where: {id : req.params.id}
+      where: { product_name: req.params.productName},
+      order: [
+        ['updatedAt', 'DESC'],
+        ['price', 'ASC']
+      ],
+      include: [{ 
+        model: db.Store, 
+        where: {store_name: req.params.storeName}}]
     }).then(function (results) {
+      console.log(results);
       res.json(results);
     })
   });
-  //use for getting total of product from certain store
-
 
   function processReceipt(recData) {
     var store;
