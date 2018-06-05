@@ -116,12 +116,23 @@ $(document).ready(function () {
             }
             $(".list-save").text(listName + " has been updated!")
             $("#updatedModal").modal('show');
+            productsToDeleteFromSavedList = [];
+            productsToAddFromSavedList = [];
         }
         $(this).blur();
     });
+    $('#btnPrint').on('click', function () {
+        var prtContent = document.getElementById("#printThis");
+        var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+        WinPrint.document.write(prtContent.innerHTML);
+        WinPrint.document.close();
+        WinPrint.focus();
+        WinPrint.print();
+        WinPrint.close();
+        window.print();
+    })
     $('#saveName').on('click', function () {
         var listName = getListNameFromUser();
-        var prodId = ""
         if (listName != "" || listName != undefined) {
             listOfProducts.forEach(product => {
                 $.get("/api/product/" + product.id, function (data) {
@@ -134,6 +145,7 @@ $(document).ready(function () {
             populateSavedLists(2);
             $('#saveModal').modal('hide');
             displayingExistingList = true;
+            populateSavedListProduct(listName);
         }
     });
 
@@ -182,7 +194,7 @@ function renderProductOnPage(data) {
     productRemoveHeading.append("<a id='" + data.id + "' class='removeProductBtn' onclick = remove(this)><span class='glyphicon glyphicon-remove'></span> Remove </a>");
     productInfoDiv.append(productRemoveHeading);
     var productNameHeading = $("<div class='productName col-xs-4'>");
-    productNameHeading.append("<h4>"+  data.product_name + "</h4>")
+    productNameHeading.append("<h4>" + data.product_name + "</h4>")
     productInfoDiv.append(productNameHeading);
     var productPriceHeading = $("<div class = 'price col-xs-4'>");
     productPriceHeading.append("<h4> $" + data.price.toFixed(2) + "</h4>");
@@ -198,7 +210,7 @@ function renderProductOnPage(data) {
     storeNameDiv.append("<h5>" + data.Store.store_name + ", " + data.Store.city + "</h5>");
     storeInfoRow.append(storeNameDiv);
     productResultDiv.append(storeInfoRow);
-    
+
     $(".list").append(productResultDiv);
     listOfProducts.push(data);
     getTotalsForEachStore();
@@ -215,7 +227,7 @@ function remove(thisBtn) {
                 indexToRemove = i;
             }
         }
-        listOfProducts.splice(indexToRemove, indexToRemove + 1);
+        listOfProducts.splice(indexToRemove, 1);
         getTotalsForEachStore();
         if (listOfProducts.length == 0) {
             emptyListDisplay();
@@ -240,7 +252,7 @@ function populateSavedLists(userID) {
     $.get("/api/lists/" + userID, function (data) {
         if (data[0].length != 0) {
             for (var i = 0; i < data[0].length; i++) {
-                div.append("<button type='button' onclick='populateSavedListProduct(this)' id= '" + data[0][i].list_Name + "' " + "class='getListBtn savedLists btn btn-default btn-large' id='btnSearch'>" + data[0][i].list_Name.toString() + "</button>");
+                div.append("<button type='button' onclick='populateSavedListProduct(this.id)' id= '" + data[0][i].list_Name + "' " + "class='getListBtn savedLists btn btn-default btn-large' id='btnSearch'>" + data[0][i].list_Name.toString() + "</button>");
             }
         }
         else {
@@ -256,19 +268,19 @@ function renderEmpty() {
     alertDiv.text("No lists saved.");
 }
 
-function populateSavedListProduct(btn) {
+function populateSavedListProduct(listName) {
     $('.badge').hide();
     $("#btnSave").show();
     $('#optimizedTotal').show();
     listOfProducts = [];
     displayingExistingList = true;
     $(".list").empty();
-    $.get("/api/list/2/" + btn.id, function (data) {
+    $.get("/api/list/2/" + listName, function (data) {
         for (var i = 0; i < data.length; i++) {
             renderProductOnPage(data[i]);
         }
     });
-    $("#listNameLabel").text(btn.id);
+    $("#listNameLabel").text(listName);
 }
 
 function getListNameFromUser() {
@@ -313,7 +325,7 @@ function getTotalsForEachStore() {
     getOptimizedTotal();
 }
 
-function getOptimizedTotal(){
+function getOptimizedTotal() {
     var total = 0;
     listOfProducts.forEach(product => {
         total += product.price;
@@ -321,7 +333,7 @@ function getOptimizedTotal(){
     $("#optimizedTotal").text("$" + total.toFixed(2));
 }
 
-function emptyListDisplay(){
+function emptyListDisplay() {
     $("#btnSave").hide();
     $('#optimizedTotal').hide();
     var msgDiv = $("<div id='emptyMsg'>");
