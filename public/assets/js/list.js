@@ -251,6 +251,7 @@ function populateSavedLists(userID) {
     div.empty();
     $.get("/api/lists/" + userID, function (data) {
         if (data[0].length != 0) {
+            div.removeClass("alert alert-warning");
             for (var i = 0; i < data[0].length; i++) {
                 div.append("<button type='button' onclick='populateSavedListProduct(this.id)' id= '" + data[0][i].list_Name + "' " + "class='getListBtn savedLists btn btn-default btn-large' id='btnSearch'>" + data[0][i].list_Name.toString() + "</button>");
             }
