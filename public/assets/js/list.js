@@ -191,23 +191,23 @@ function renderProductOnPage(data) {
     var productInfoDiv = $("<div>")
     productInfoDiv.attr("class", "panel-body row");
     var productRemoveHeading = $("<div class='col-xs-2'>");
-    productRemoveHeading.append("<a id='" + data.id + "' class='removeProductBtn' onclick = remove(this)><span class='glyphicon glyphicon-remove'></span> Remove </a>");
+    productRemoveHeading.append("<a id='" + data.id + "' class='removeProductBtn' onclick = remove(this)><span class='glyphicon glyphicon-remove'></span> <h4>Remove<h4> </a>");
     productInfoDiv.append(productRemoveHeading);
-    var productNameHeading = $("<div class='productName col-xs-4'>");
-    productNameHeading.append("<h4>" + data.product_name + "</h4>")
+    var productNameHeading = $("<div class='productName col-xs-5'>");
+    productNameHeading.append("<h3>" + data.product_name + "</h3>")
     productInfoDiv.append(productNameHeading);
-    var productPriceHeading = $("<div class = 'price col-xs-4'>");
-    productPriceHeading.append("<h4> $" + data.price.toFixed(2) + "</h4>");
+    var productPriceHeading = $("<div class = 'price col-xs-5'>");
+    productPriceHeading.append("<h3> $" + data.price.toFixed(2) + "</h3>");
     productInfoDiv.append(productPriceHeading);
-    var spaceDiv = $("<div class='col-xs-2'>");
-    productInfoDiv.append(spaceDiv);
+    // var spaceDiv = $("<div class='col-xs-2'>");
+    // productInfoDiv.append(spaceDiv);
     productResultDiv.append(productInfoDiv);
     var storeInfoRow = $("<div class='storeInfo panel-body row'>");
     var blankRemoveDiv = $("<div class='col-xs-2'>");
     storeInfoRow.append(blankRemoveDiv);
-    var storeNameDiv = $("<div class='col-xs-4'>");
+    var storeNameDiv = $("<div id = 'productStore' class='col-xs-4'>");
 
-    storeNameDiv.append("<h5>" + data.Store.store_name + ", " + data.Store.city + "</h5>");
+    storeNameDiv.append("<h5> Lowest price found at: " + data.Store.store_name + ", " + data.Store.city + "</h5>");
     storeInfoRow.append(storeNameDiv);
     productResultDiv.append(storeInfoRow);
 
