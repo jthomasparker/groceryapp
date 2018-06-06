@@ -21,13 +21,18 @@
         border-top: solid 1px rgba(255, 255, 255, 0.1);
     }
 
-    #optimizedTotal{
+    #optimizedTotal {
         color: limegreen;
         font-size: 24px
     }
 
     .productName {
         float: left
+    }
+
+    #productStore {
+        margin-left: 331px;
+        margin-top: -41px;
     }
 
     .price {
@@ -214,10 +219,10 @@
                         </form>
                         <h2 id="listNameLabel"></h2>
                         <div class="panel panel-default">
-                            
-                                <div id = "optimizedTotal"></div>
+
+                            <div id="optimizedTotal"></div>
                             <div class="list" id="printThis"></div>
-                        </div>                        
+                        </div>
                         <button type="button" class="btn btn-success" id="btnSave">Save</button>
                         <!-- <button type="button" class="btn btn-primary" id="btnPrint">Print</button> -->
                     </div>
@@ -266,15 +271,15 @@
         </div>
     </div>
     <div class="modal" tabindex="-1" role="dialog" id="updatedModal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-body list-save"></h3>
-                        <button type="button" style= "float: right" class="btn btn-success right" data-dismiss="modal">Ok</button>
-                    </div>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-body list-save"></h3>
+                    <button type="button" style="float: right" class="btn btn-success right" data-dismiss="modal">Ok</button>
                 </div>
             </div>
         </div>
+    </div>
 </body>
 
 </html>
