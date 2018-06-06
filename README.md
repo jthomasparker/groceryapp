@@ -6,11 +6,8 @@ Fullstack Web Development
 Project 2
 
 Our Team
-
 Josh Parker
-
 Alexandra Peralta
-
 Zarah Parker
 
 
